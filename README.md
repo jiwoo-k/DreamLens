@@ -214,3 +214,40 @@ data/
 
 ## 라이선스
 내부 프로젝트(비공개). **제3자 재배포 금지.**
+
+## 트러블슈팅
+
+### 프로토타입에서 실제 서비스로: Streamlit과 Django의 동작 방식 차이 극복
+
+### 문제점
+> **문제 상황:** AI 해몽 기능의 빠른 검증을 위해 **Streamlit**으로 만든 프로토타입을 안정적인 실제 서비스를 위해 **Django** 프레임워크로 전환하는 과정에서 두 프레임워크의 근본적인 동작 방식 차이로 인해 **'상태 소실'**과 **'사용자 경험 저하'**라는 두 가지 핵심 문제에 직면했습니다.
+
+* **상태 소실 (State Loss):** Streamlit에서는 자연스럽게 유지되던 사용자의 꿈 입력 내용이 Django 환경에서는 '해몽하기' 버튼을 누를 때마다 `<textarea>`에서 사라져 사용성을 크게 해치는 문제가 있었습니다.
+* **사용자 경험 저하:** Streamlit의 부드러운 로딩 스피너(`st.spinner`)와 달리, Django에서는 AI가 응답할 때까지 수 초간 화면 전체가 멈춰버려 사용자가 서비스가 멈췄다고 오해할 수 있는 부정적인 사용자 경험을 제공했습니다.
+
+### 해결 과정
+1.  **[상태 소실 문제 해결] Django 세션(Session)을 이용한 데이터 유지**
+    * 사용자가 '해몽하기' 버튼을 눌러 POST 요청을 보낼 때, 입력된 꿈 내용을 `request.session`에 저장했습니다.
+    * 이후 결과 페이지가 렌더링 된 후 다시 GET 요청으로 돌아왔을 때, 세션에 저장된 값을 템플릿 변수에 다시 넣어줌으로써 사용자의 입력값을 유지하는 데 성공했습니다.
+
+    ```python
+    # views.py의 예시
+    def get_interpretation(request):
+        if request.method == 'POST':
+            dream_content = request.POST.get('dream')
+            request.session['dream_content'] = dream_content # 세션에 저장
+            # ... AI 해몽 로직 ...
+            return render(request, 'result.html', context)
+        
+        dream_content = request.session.get('dream_content', '') # 세션에서 불러오기
+        return render(request, 'interpret.html', {'dream': dream_content})
+    ```
+
+2.  **[사용자 경험 저하 문제 해결] JavaScript를 이용한 로딩 스피너 구현**
+    * '해몽하기' 버튼이 눌려 form이 제출(`submit`)되는 순간, 미리 숨겨져 있던 스피너(spinner) UI 요소를 화면에 표시하도록 JavaScript 코드를 추가했습니다.
+    * 이를 통해 AI의 응답을 기다리는 동안 시스템이 멈춘 것이 아니라 사용자의 요청을 정상적으로 처리 중이라는 것을 명확하게 하여 사용자 경험을 개선했습니다.
+
+### 배운 점
+
+* **프로토타이핑 도구와 웹 프레임워크의 아키텍처 차이 이해:** Streamlit의 편의성과 Django의 동작 방식 차이를 명확히 이해하게 되었습니다.
+* **웹의 근본 원리에 기반한 설계 역량:** HTTP의 무상태성(Stateless)과 같은 웹의 원리를 기반으로 확장성과 안정성을 모두 고려하는 설계의 중요성을 깨달았습니다.
