@@ -208,23 +208,6 @@ data/
 *.log
 ```
 
-
-
-## Troubleshooting
-
-| 오류 메시지                                                                                                        | 문제점                                                        | 해결방안                                                                |
-| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `RuntimeWarning: DateTimeField Diary.date received a naive datetime (...) while time zone support is active.` | 타임존 활성화 상태에서 naive datetime 저장                             | `USE_TZ=True` 유지, 저장 전 `timezone.make_aware()`로 변환                  |
-| `GET /static/... 500`                                                                                         | `DEBUG=False`에서 정적 경로/수집/서빙 미설정                            | `STATIC_ROOT` 지정, `collectstatic` 실행, Whitenoise/웹서버 정적 설정 및 퍼미션 확인 |
-| `pip ... numpy 2.3.2 incompatible with opencv-python ...`                                                     | Numpy/Opencv 버전 충돌                                         | `pip install "numpy<2.3.0"` 또는 opencv 버전 고정(둘 중 하나 기준 맞춤)           |
-| `NameError at /report/ name 'Max' is not defined`                                                             | Python 오탈자(`Max`)                                          | 내장함수 `max()`로 수정 또는 필요한 모듈 정확히 import                               |
-| `NoReverseMatch ... 'diary_list_yyyymm' not found`                                                            | URL name 불일치                                               | `urls.py`의 `name`과 템플릿 `{% url %}` 이름 통일                            |
-| `KeyError 'title' (generator.py)`                                                                             | 요청 데이터 키 누락/명칭 불일치                                         | `request.POST.get('title')`로 방어, 폼 필드 `name` 점검, None 처리 로직 추가      |
-| 인덱스/메타 로드 실패                                                                                                  | `vectorDB/dream.index` 또는 `data/meta_dream.json` 부재/경로 불일치 | 인덱스 재생성, 상수 경로(INDEX\_PATH/METADATA\_PATH)와 실제 파일 일치 확인             |
-| 정적 변경 미반영                                                                                                     | 브라우저/프록시 캐시                                                | 강력 새로고침, 파일명 해시 또는 `?v=YYYYMMDDHH` 쿼리로 캐싱 무효화                       |
-
-
-
 ## 보안
 - API 키·비밀키는 .env로 관리(절대 커밋 금지)
 - 사용자 데이터 백업/삭제 정책 수립 권장
