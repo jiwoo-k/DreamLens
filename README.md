@@ -42,7 +42,6 @@ _**“당신의 꿈, 우리는 그 속의 이야기를 읽습니다.”**_
 | Django                             | 사용자 인증, 일기장 저장, 서버 사이드 로직 구현 |
 | Streamlit *(옵션, 프로토타입/데모)* | LLM 기반 해몽 분석 데모 UI 구현        |
 | HTML / CSS                         | 기본 UI 구조 및 스타일링                 |
-| Django Template Filter             | 커스텀 템플릿 필터(`dict_get`) 작성        |
 
 ### 💻 Language & Libraries
 | **기술 / 도구**                   | **설명**                                   |
