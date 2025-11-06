@@ -7,8 +7,6 @@
 ## 프로젝트 소개
 _**“당신의 꿈, 우리는 그 속의 이야기를 읽습니다.”**_
 
-우리는 ‘무의식의 이야기’를 기술로 들여다보는 팀, 김이안연구소입니다.
-
 "DreamLens"는 인간의 꿈이라는 주관적이고 몽환적인 경험을 **AI 기반 해석 시스템**으로 풀어내고자 하는 프로젝트입니다.
 
 팀 김이안연구소는 데이터 분석, 웹 개발, UI/UX 기획, 인공지능 분야의 경험을 바탕으로, 사용자들이 기록한 꿈을 **의미 기반으로 분석**하고, 이를 통해 **심리적 통찰과 자기 이해**로 이어지는 경험을 제공합니다.
@@ -161,13 +159,6 @@ python manage.py runserver
 - (선택) 로그인 → 꿈 텍스트 입력 → AI 해몽 결과 확인/저장
 
 - 월간 일기장 탐색 → 리포트(감정/종류/키워드) 확인
-
-## 정적 파일 배포
-
-```bash
-# DEBUG=false 환경에서
-python manage.py collectstatic --clear --noinput
-# Whitenoise 또는 웹서버(Nginx/S3 등) 정적 서빙 설정 필요
 ```
 
 ## 데이터 준비
@@ -178,7 +169,7 @@ python manage.py collectstatic --clear --noinput
 
 
 
-### setting.py 설정 (발췌)
+### setting.py 설정
 ```python
 # settings.py
 LANGUAGE_CODE = 'ko-kr'
@@ -186,11 +177,7 @@ TIME_ZONE = 'Asia/Seoul'
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # 배포 시 collectstatic 타깃
-
-# 배포 시 반드시 도메인 반영
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'your-domain.com']
-CSRF_TRUSTED_ORIGINS = ['https://your-domain.com']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 ```
 
 ### .gitignore 설정 (권장)
